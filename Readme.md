@@ -134,7 +134,7 @@ terraform destroy
 
 1. Log in to Confluent Cloud
 
-```
+```shell
 confluent login
 ```
 
@@ -144,11 +144,13 @@ Enter a few records and then press 'Ctrl-C' when you're done.
 
 Sample records:
 
+```json
  {"number":1,"date":18500,"shipping_address":"899 W Evelyn Ave, Mountain View, CA 94041, USA","cost":15.00}
 
  {"number":2,"date":18501,"shipping_address":"1 Bedford St, London WC2E 9HG, United Kingdom","cost":5.00}
 
  {"number":3,"date":18502,"shipping_address":"3307 Northland Dr Suite 400, Austin, TX 78731, USA","cost":10.00} 
+````
 
 ``` 
 confluent kafka topic produce <TOPIC_NAME> --environment <ENVIRONMENT_ID> \    
