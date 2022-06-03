@@ -1,7 +1,7 @@
 # Confluent Cloud Terraform deployment
 
 Confluent Terraform provider 
-https://registry.terraform.io/providers/confluentinc/confluentcloud/latest/docs
+https://registry.terraform.io/providers/confluentinc/confluent/latest/docs
 
 * Create a service account in Confluent Cloud
 
@@ -9,87 +9,137 @@ https://registry.terraform.io/providers/confluentinc/confluentcloud/latest/docs
 
 * Create a Cloud API Key for the service account
 
-
 ```
 export CONFLUENT_CLOUD_API_KEY="<cloud_api_key>" 
 
 export CONFLUENT_CLOUD_API_SECRET="<cloud_api_secret>"
 ```
  
-
-## TFVARS 
+## Variables 
 
 *terraform.tfvars*
 
-* **Confluent Cloud environment**
+### Confluent Cloud environment
 
-    Existing Confluent Cloud Environment ID 
+Existing Confluent Cloud Environment ID 
 
-    ```
-    environment = "default"
-    ```
+```
+environment = "default"
+```
 
- ** Terraform uses an existing environment, it wont create a new environment if it does not exist.
+*Terraform uses an existing environment, it wont create a new environment if it does not exist*.
 
-* **Standard Cluster**
+### Cluster 
 
-    Cluster properties:
+#### Basic Cluster
 
-    - **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
-    - **cloud**: must be set to GCP, AWS or AZURE
+Cluster properties:
 
+- **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
+- **cloud**: must be set to GCP, AWS or AZURE
 
-    ```
-    cluster = {
+```
+cluster = {
+    display_name = "basic-inventory"
+    availability = "SINGLE_ZONE"
+    cloud        = "GCP"
+    region       = "europe-west3"
+    type         = "BASIC"  
+}
+``` 
+
+#### Standard Cluster
+
+Cluster properties:
+
+- **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
+- **cloud**: must be set to GCP, AWS or AZURE
+
+```
+cluster = {
     display_name = "inventory"
     availability = "SINGLE_ZONE"
     cloud        = "GCP"
     region       = "europe-west3"
+    type         = "STANDARD"  
+}
+``` 
+
+### Service Accounts
+
+- Service account is required in this configuration to create topics and assign roles
+
+```
+service_account_manager = "mcolomer-sa-manager"
+```
+
+- RBAC 
+
+* RBAC is not supported in Confluent Cloud Basic Cluster. 
+    
+* Standard cluster: Service account to consume or produce messages from/to topics:
+ 
+```
+service_accounts = ["mcolomer-producer-sa", "mcolomer-consumer-sa", "mcolomer-producer-customer-sa"]
+```
+
+### Topics
+ 
+A list of topics to create:
+
+#### Basic Cluster 
+
+Each object:
+
+- name: Topic name  
+
+```
+topics = [
+    {
+        name = "mcolomer-orders"  
+    }, 
+    {
+        name = "mcolomer-inventory" 
+    },
+    {
+        name = "mcolomer-customers" 
     }
-    ``` 
+]
+```
 
-* **Service Accounts**
+#### Standard Cluster 
 
-    - Service account is required in this configuration to create topics and assign roles
+Each object:  
 
-    ```
-    service_account_manager = "mcolomer-sa-manager"
-    ```
+- name: Topic name 
+- consumer: Service account to consume
+- producer: Service account to produce 
 
-    - Service account to consume or produce messages from/to topics:
+```
+topics = [
+{
+    name = "mcolomer-orders"
+    producer = "mcolomer-producer-sa",
+    consumer = "mcolomer-consumer-sa"
+    }, 
+    {
+    name = "mcolomer-inventory"
+    producer = "mcolomer-producer-sa",
+    consumer = "mcolomer-consumer-sa"
+    },
+    {
+    name = "mcolomer-customers"
+    producer = "mcolomer-producer-customer-sa",
+    consumer = "mcolomer-consumer-sa"
+    }
+]
+```
+
+### Examples 
  
-    ```
-    service_accounts = ["mcolomer-producer-sa", "mcolomer-consumer-sa", "mcolomer-producer-customer-sa"]
-    ```
+  * Basic GCP Cluster: ./envs/basic-gcp.tfvars
 
-* **Topics**
- 
-    A list of topics to create:
-
-    Each object:  
-    - name: Topic name 
-    - consumer: Service account to consume
-    - producer: Service account to produce 
-
-    ```
-    topics = [
-        {
-            name = "mcolomer-orders"
-            producer = "mcolomer-producer-sa",
-            consumer = "mcolomer-consumer-sa"
-        }, 
-        {
-            name = "mcolomer-inventory"
-            producer = "mcolomer-producer-sa",
-            consumer = "mcolomer-consumer-sa"
-        },
-        {
-            name = "mcolomer-customers"
-            producer = "mcolomer-producer-customer-sa",
-            consumer = "mcolomer-consumer-sa"
-        }
-    ]
-    ```
+  * Standard GCP Cluster: ./envs/standard-gcp.tfvars  
 
 ## Terraform 
 
@@ -108,11 +158,11 @@ terraform validate
 * Deploy  
 
 ```
-terraform plan 
+terraform plan --var-file=./envs/standard-gcp.tfvars
 ```
 
 ```
-terraform apply 
+terraform apply --var-file=./envs/standard-gcp.tfvars
 ```
 
 * Get sensistivie information about the accounts: 
@@ -130,7 +180,7 @@ terraform apply
 terraform destroy 
 ```
          
-# Quick test   
+## Quick test   
 
 1. Log in to Confluent Cloud
 

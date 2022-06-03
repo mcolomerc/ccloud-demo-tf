@@ -1,14 +1,14 @@
 environment = "env-zp5p7"
 
 cluster = {
-  display_name = "inventory"
+  display_name = "standard-inventory"
   availability = "SINGLE_ZONE"
   cloud        = "GCP"
   region       = "europe-west3"
-  type         = "BASIC" # BASIC / STANDARD
+  type         = "STANDARD" # BASIC / STANDARD
 }
 
-service_account_manager = "mcolomer-sa-manager"
+service_account_manager = "mcolomer-sa-man"
 
 service_accounts = ["mcolomer-producer-sa", "mcolomer-consumer-sa", "mcolomer-producer-customer-sa"]
 

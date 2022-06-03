@@ -14,3 +14,8 @@ variable "service_accounts" {
     type = list(string)
 } 
 
+variable "rbac_enabled" {
+    type = bool
+}
+
+

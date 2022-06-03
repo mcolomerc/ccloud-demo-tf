@@ -6,11 +6,15 @@ variable "cluster"  {
     type = string
 }
 
+variable "rbac_enabled" {
+    type = bool
+}
+
 variable "topic" {
    type = object({
        name = string 
-       consumer = string
-       producer = string 
+       consumer = optional(string)
+       producer = optional(string) 
    })
 } 
 

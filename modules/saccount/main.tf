@@ -41,10 +41,13 @@ resource "confluent_api_key" "app-manager-kafka-api-key" {
     confluent_role_binding.app-manager-kafka-cluster-admin
   ]
 }
+locals {
+  sa_set =  var.rbac_enabled == true ? toset(var.service_accounts) : toset([]) 
+}
 
 ## SERVICE ACCOUNTs 
 resource "confluent_service_account" "sa" {
-  for_each     = toset(var.service_accounts)
+  for_each     = local.sa_set
   display_name = each.key
   description  = "Service account ${each.key} - ${data.confluent_kafka_cluster.cluster.id} Kafka cluster"
 }

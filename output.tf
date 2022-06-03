@@ -8,6 +8,7 @@ output "cluster" {
     region        = module.cluster.ccloud_cluster.region
     http_endpoint = module.cluster.ccloud_cluster.http_endpoint
     rbac_crn      = module.cluster.ccloud_cluster.rbac_crn
+    kind          = module.cluster.ccloud_cluster.kind
   }
 }
 

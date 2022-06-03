@@ -9,5 +9,6 @@ variable "cluster" {
     availability = string
     cloud        = string
     region       = string
+    type         = string
   })
 }
