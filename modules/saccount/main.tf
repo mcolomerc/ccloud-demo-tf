@@ -1,9 +1,11 @@
-
+data "confluent_environment" "env" {
+  id = var.environment
+} 
   
 data "confluent_kafka_cluster" "cluster" {
   id = var.cluster
   environment {
-    id = var.environment
+    id = data.confluent_environment.env.id
   }
 }
 
@@ -34,13 +36,14 @@ resource "confluent_api_key" "app-manager-kafka-api-key" {
     kind        = data.confluent_kafka_cluster.cluster.kind
 
     environment {
-      id = var.environment
+      id = data.confluent_environment.env.id
     }
   }
   depends_on = [
     confluent_role_binding.app-manager-kafka-cluster-admin
   ]
 }
+
 locals {
   sa_set =  var.rbac_enabled == true ? toset(var.service_accounts) : toset([]) 
 }
@@ -68,7 +71,7 @@ resource "confluent_api_key" "sa-kafka-api-key" {
     kind        = data.confluent_kafka_cluster.cluster.kind
 
     environment {
-      id = var.environment
+      id = data.confluent_environment.env.id
     }
   }
 }

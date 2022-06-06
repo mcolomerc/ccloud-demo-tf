@@ -9,7 +9,7 @@ https://registry.terraform.io/providers/confluentinc/confluent/latest/docs
 
 * Create a Cloud API Key for the service account
 
-```
+```sh
 export CONFLUENT_CLOUD_API_KEY="<cloud_api_key>" 
 
 export CONFLUENT_CLOUD_API_SECRET="<cloud_api_secret>"
@@ -23,7 +23,7 @@ export CONFLUENT_CLOUD_API_SECRET="<cloud_api_secret>"
 
 Existing Confluent Cloud Environment ID 
 
-```
+```sh
 environment = "default"
 ```
 
@@ -38,7 +38,7 @@ Cluster properties:
 - **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
 - **cloud**: must be set to GCP, AWS or AZURE
 
-```
+```sh
 cluster = {
     display_name = "basic-inventory"
     availability = "SINGLE_ZONE"
@@ -55,7 +55,7 @@ Cluster properties:
 - **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
 - **cloud**: must be set to GCP, AWS or AZURE
 
-```
+```sh
 cluster = {
     display_name = "inventory"
     availability = "SINGLE_ZONE"
@@ -69,7 +69,7 @@ cluster = {
 
 - Service account is required in this configuration to create topics and assign roles
 
-```
+```sh
 service_account_manager = "mcolomer-sa-manager"
 ```
 
@@ -79,7 +79,7 @@ service_account_manager = "mcolomer-sa-manager"
     
 * Standard cluster: Service account to consume or produce messages from/to topics:
  
-```
+```sh
 service_accounts = ["mcolomer-producer-sa", "mcolomer-consumer-sa", "mcolomer-producer-customer-sa"]
 ```
 
@@ -93,7 +93,7 @@ Each object:
 
 - name: Topic name  
 
-```
+```sh
 topics = [
     {
         name = "mcolomer-orders"  
@@ -115,7 +115,7 @@ Each object:
 - consumer: Service account to consume
 - producer: Service account to produce 
 
-```
+```sh
 topics = [
 {
     name = "mcolomer-orders"
@@ -145,23 +145,23 @@ topics = [
 
 * Initialize the Terraform environment:
 
-```
+```sh
 terraform init 
 ```
 
 * Validate 
 
-```
+```sh
 terraform validate 
 ```
 
 * Deploy  
 
-```
+```sh
 terraform plan --var-file=./envs/standard-gcp.tfvars
 ```
 
-```
+```sh
 terraform apply --var-file=./envs/standard-gcp.tfvars
 ```
 
@@ -176,8 +176,14 @@ terraform apply --var-file=./envs/standard-gcp.tfvars
 
 * Clean Up 
 
-```
+```sh
 terraform destroy 
+```
+
+* Enable Debug 
+
+```sh
+export TF_LOG="DEBUG"
 ```
          
 ## Quick test   

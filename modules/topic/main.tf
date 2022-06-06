@@ -38,6 +38,13 @@ resource "confluent_role_binding" "app-producer-developer-read-from-topic" {
   principal   = "User:${data.confluent_service_account.consumer[count.index].id}"
   role_name   = "DeveloperRead"
   crn_pattern = "${data.confluent_kafka_cluster.kafka_cluster.rbac_crn}/kafka=${data.confluent_kafka_cluster.kafka_cluster.id}/topic=${confluent_kafka_topic.topic.topic_name}"
+} 
+
+resource "confluent_role_binding" "app-producer-developer-write" {
+  count = var.rbac_enabled == true ? 1 : 0
+  principal   = "User:${data.confluent_service_account.producer[count.index].id}"
+  role_name   = "DeveloperWrite"
+  crn_pattern = "${data.confluent_kafka_cluster.kafka_cluster.rbac_crn}/kafka=${data.confluent_kafka_cluster.kafka_cluster.id}/topic=${confluent_kafka_topic.topic.topic_name}"
 }
 
 resource "confluent_role_binding" "app-producer-developer-read-from-group" {
@@ -46,12 +53,5 @@ resource "confluent_role_binding" "app-producer-developer-read-from-group" {
   role_name = "DeveloperRead"
   crn_pattern = "${data.confluent_kafka_cluster.kafka_cluster.rbac_crn}/kafka=${data.confluent_kafka_cluster.kafka_cluster.id}/group=confluent_cli_consumer_*"
 }  
-
-resource "confluent_role_binding" "app-producer-developer-write" {
-  count = var.rbac_enabled == true ? 1 : 0
-  principal   = "User:${data.confluent_service_account.producer[count.index].id}"
-  role_name   = "DeveloperWrite"
-  crn_pattern = "${data.confluent_kafka_cluster.kafka_cluster.rbac_crn}/kafka=${data.confluent_kafka_cluster.kafka_cluster.id}/topic=${confluent_kafka_topic.topic.topic_name}"
-}
 
 
