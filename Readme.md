@@ -78,10 +78,17 @@ service_account_manager = "mcolomer-sa-manager"
 * RBAC is not supported in Confluent Cloud Basic Cluster. 
     
 * Standard cluster: Service account to consume or produce messages from/to topics:
+
+´´´sh 
+service_accounts = ["mcolomer-producer-sa", "mcolomer-producer-customer-sa"]
+´´´
+
+Service accoounts with confluent_cli_consumer_* group
+
+´´´sh 
+service_accounts_cli_group = ["mcolomer-consumer-sa" ,"mcolomer-cons-sa" ]
+´´´
  
-```sh
-service_accounts = ["mcolomer-producer-sa", "mcolomer-consumer-sa", "mcolomer-producer-customer-sa"]
-```
 
 ### Topics
  
@@ -170,7 +177,7 @@ terraform apply --var-file=./envs/standard-gcp.tfvars
     - Service account manager
     - Service accounts to consume messages from topics
 
-    ```
+    ```sh
     terraform output sas
     ```
 
@@ -185,7 +192,13 @@ terraform destroy
 ```sh
 export TF_LOG="DEBUG"
 ```
-         
+
+* Enable log file 
+
+```sh
+export TF_LOG_PATH="./full_log.txt" 
+```
+
 ## Quick test   
 
 1. Log in to Confluent Cloud
