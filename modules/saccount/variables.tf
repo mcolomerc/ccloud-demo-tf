@@ -1,21 +1,25 @@
 variable "environment" {
-    default = "default"
+  type = string
 }
 
-variable "cluster"  {
-    type = string
+variable "cluster" {
+  type = string
 }
-  
+
 variable "service_account_manager" {
-    default = "app-manager"
+  type = string
 }
 
 variable "service_accounts" {
-    type = list(string)
-} 
+  type = list(string) 
+}
 
+variable "service_accounts_cli_group" {
+  type = list(string) 
+}
+ 
 variable "rbac_enabled" {
-    type = bool
+  type = bool
 }
 
 

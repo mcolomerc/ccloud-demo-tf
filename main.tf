@@ -14,12 +14,13 @@ module "cluster" {
 }
 
 module "saccount" {
-  source                  = "./modules/saccount"
-  environment             = data.confluent_environment.environment.id
-  cluster                 = module.cluster.ccloud_cluster.id
-  service_account_manager = var.service_account_manager
-  service_accounts        = var.service_accounts
-  rbac_enabled            = module.cluster.rbac_enabled
+  source                     = "./modules/saccount"
+  environment                = data.confluent_environment.environment.id
+  cluster                    = module.cluster.ccloud_cluster.id
+  service_account_manager    = var.service_account_manager
+  service_accounts           = var.service_accounts
+  service_accounts_cli_group = var.service_accounts_cli_group
+  rbac_enabled               = module.cluster.rbac_enabled
   depends_on = [
     module.cluster.ccloud_cluster
   ]

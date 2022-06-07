@@ -24,4 +24,11 @@ output "manager_service_account" {
     secret = confluent_api_key.app-manager-kafka-api-key.secret 
   }
 }
- 
+
+output "sa_accounts" {
+  value = local.sa_accounts
+}
+
+output "cli_group_maps" {
+  value = local.sa_accounts_groups
+}

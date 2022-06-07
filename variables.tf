@@ -1,6 +1,5 @@
 variable "environment" {
-  default = "default"
-  type    = string
+  type = string
 }
 
 variable "cluster" {
@@ -11,13 +10,6 @@ variable "cluster" {
     region       = string
     type         = string
   })
-  default = {
-    display_name = "inventory"
-    availability = "SINGLE_ZONE"
-    cloud        = "GCP"
-    region       = "europe-west3"
-    type         = "STANDARD"
-  }
   validation {
     condition     = contains(["SINGLE_ZONE", "MULTI_ZONE"], var.cluster.availability) && contains(["GCP", "AWS", "AZURE"], var.cluster.cloud) && contains(["BASIC", "STANDARD"], var.cluster.type)
     error_message = "cluster.availability => SINGLE_ZONE or MULTI_ZONE, cluster.cloud => GCP, AWS or AZURE, cluster.type => BASIC or STANDARD"
@@ -30,7 +22,10 @@ variable "service_account_manager" {
 
 variable "service_accounts" {
   type = list(string)
-  default = []
+}
+
+variable "service_accounts_cli_group" {
+  type = list(string)
 }
 
 variable "topics" {

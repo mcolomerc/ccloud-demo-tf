@@ -38,3 +38,11 @@ output "topics" {
     }
   }
 }
+
+output "accounts" {
+  value = module.saccount.sa_accounts
+}
+
+output "cli_accounts" {
+  value = module.saccount.cli_group_maps
+}
