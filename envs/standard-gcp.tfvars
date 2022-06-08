@@ -1,28 +1,54 @@
 environment = "env-zp5p7"
 
 cluster = {
-  display_name = "standard-inventory"
+  display_name = "mcolomer-standard-inventory"
   availability = "SINGLE_ZONE"
   cloud        = "GCP"
   region       = "europe-west3"
   type         = "STANDARD" # BASIC / STANDARD
 }
 
-service_account_manager = "mcolomer-sa-man"
-
-service_accounts = ["mcolomer-producer-sa", "mcolomer-producer-customer-sa"]
-
-#confluent_cli_consumer_*
-service_accounts_cli_group = ["mcolomer-consumer-sa" ,"mcolomer-cons-sa" ]
+serv_account_admin = {
+  name = "mcolomer-sa-man"
+  role = "CloudClusterAdmin"  
+}
  
+ 
+serv_accounts = [ 
+  {
+    name = "mcolomer-producer-sa"  
+  },
+  {
+    name = "mcolomer-producer-customer-sa"  
+  },
+  {
+    name   = "mcolomer-consumer-sa"  
+    groups = [
+      { 
+        group = "confluent_cli_consumer_*", 
+        role = "DeveloperRead" 
+      }
+    ]
+  },
+  {
+    name   = "mcolomer-cons-sa" 
+    groups = [
+      { 
+        group = "confluent_cli_consumer_*", 
+        role = "DeveloperRead" 
+      }
+    ]
+  }
+]
+
 #Topic 
 #DeveloperWrite
 #DeveloperRead
 topics = [
   {
     name     = "mcolomer-orders"
-    producer = "mcolomer-producer-sa",  
-    consumer = "mcolomer-consumer-sa"  
+    producer = "mcolomer-producer-sa",
+    consumer = "mcolomer-consumer-sa"
   },
   {
     name     = "mcolomer-inventory"

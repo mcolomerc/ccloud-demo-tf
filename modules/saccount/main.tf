@@ -9,28 +9,28 @@ data "confluent_kafka_cluster" "cluster" {
   }
 }
 
-resource "confluent_service_account" "app-manager" {
-  display_name = var.service_account_manager
+resource "confluent_service_account" "saccount" {
+  display_name = var.serv_account.name
   description  = "Service account to manage ${data.confluent_kafka_cluster.cluster.display_name} Kafka cluster"
 }
 
-resource "confluent_role_binding" "app-manager-kafka-cluster-admin" {
-  principal   = "User:${confluent_service_account.app-manager.id}"
-  role_name   = "CloudClusterAdmin"
+resource "confluent_role_binding" "saccount_role" {
+  count = var.serv_account.role != null ? 1 : 0
+  principal   = "User:${confluent_service_account.saccount.id}"
+  role_name   = var.serv_account.role
   crn_pattern = data.confluent_kafka_cluster.cluster.rbac_crn
   depends_on = [
-    confluent_service_account.app-manager
+    confluent_service_account.saccount
   ]
 }
 
-
-resource "confluent_api_key" "app-manager-kafka-api-key" {
-  display_name = "${var.service_account_manager}-kafka-api-key"
-  description  = "Kafka API Key that is owned by ${var.service_account_manager} service account"
+resource "confluent_api_key" "saccount_kafka_api_key" {
+  display_name = "${var.serv_account.name}_kafka_api_key"
+  description  = "Kafka API Key that is owned by ${var.serv_account.name} service account"
   owner {
-    id          = confluent_service_account.app-manager.id
-    api_version = confluent_service_account.app-manager.api_version
-    kind        = confluent_service_account.app-manager.kind
+    id          = confluent_service_account.saccount.id
+    api_version = confluent_service_account.saccount.api_version
+    kind        = confluent_service_account.saccount.kind
   }
 
   managed_resource {
@@ -43,84 +43,18 @@ resource "confluent_api_key" "app-manager-kafka-api-key" {
     }
   }
   depends_on = [
-    confluent_role_binding.app-manager-kafka-cluster-admin
+    confluent_service_account.saccount
   ]
 }
-
 locals {
-  sa_accounts = var.rbac_enabled == true ? toset(var.service_accounts) : toset([])
-  sa_accounts_groups = var.rbac_enabled == true ? toset(var.service_accounts_cli_group) : toset([])
+  groups = var.serv_account.groups != null ? var.serv_account.groups : []
 }
-
-## SERVICE ACCOUNTs 
-resource "confluent_service_account" "sa" {
-  for_each     = local.sa_accounts
-  display_name = each.value
-  description  = "Service account ${each.value} - ${data.confluent_kafka_cluster.cluster.id} Kafka cluster"
-}
-
-resource "confluent_api_key" "sa-kafka-api-key" {
-  for_each     = confluent_service_account.sa
-  display_name = "${each.value.id}-kafka-api-key"
-  description  = "Kafka API Key that is owned by ${each.value.id} service account"
-  owner {
-    id          = each.value.id
-    api_version = each.value.api_version
-    kind        = each.value.kind
-  }
-
-  managed_resource {
-    id          = data.confluent_kafka_cluster.cluster.id
-    api_version = data.confluent_kafka_cluster.cluster.api_version
-    kind        = data.confluent_kafka_cluster.cluster.kind
-
-    environment {
-      id = data.confluent_environment.env.id
-    }
-  }
+resource "confluent_role_binding" "saccount_group" {
+  for_each    = { for group in local.groups : group.group => group }
+  principal   = "User:${confluent_service_account.saccount.id}"
+  role_name   = each.value.role
+  crn_pattern = "${data.confluent_kafka_cluster.cluster.rbac_crn}/kafka=${data.confluent_kafka_cluster.cluster.id}/group=${each.value.group}"
   depends_on = [
-    confluent_service_account.sa
-  ]
-}
-
-## SERVICE ACCOUNTs - GROUPS
-
-resource "confluent_service_account" "sa_group" {
-  for_each     = local.sa_accounts_groups
-  display_name = each.value
-  description  = "Service account ${each.value} - ${data.confluent_kafka_cluster.cluster.id} Kafka cluster"
-}
-
-resource "confluent_api_key" "sa-group-kafka-api-key" {
-  for_each     = confluent_service_account.sa_group
-  display_name = "${each.value.id}-kafka-api-key"
-  description  = "Kafka API Key that is owned by ${each.value.id} service account"
-  owner {
-    id          = each.value.id
-    api_version = each.value.api_version
-    kind        = each.value.kind
-  }
-
-  managed_resource {
-    id          = data.confluent_kafka_cluster.cluster.id
-    api_version = data.confluent_kafka_cluster.cluster.api_version
-    kind        = data.confluent_kafka_cluster.cluster.kind
-
-    environment {
-      id = data.confluent_environment.env.id
-    }
-  }
-  depends_on = [
-    confluent_service_account.sa_group
-  ]
-}
-
-resource "confluent_role_binding" "app-consumer-developer-read-from-group" { 
-  for_each     = confluent_service_account.sa_group
-  principal   = "User:${each.value.id}"
-  role_name   = "DeveloperRead"
-  crn_pattern = "${data.confluent_kafka_cluster.cluster.rbac_crn}/kafka=${data.confluent_kafka_cluster.cluster.id}/group=confluent_cli_consumer_*"
-  depends_on = [
-    confluent_api_key.sa-group-kafka-api-key
+   confluent_service_account.saccount
   ]
 }

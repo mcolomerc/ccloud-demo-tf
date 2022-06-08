@@ -16,16 +16,22 @@ variable "cluster" {
   }
 }
 
-variable "service_account_manager" {
-  type = string
+variable "serv_account_admin" {
+  type = object({
+    name  = string
+    role = string
+  })
 }
 
-variable "service_accounts" {
-  type = list(string)
-}
-
-variable "service_accounts_cli_group" {
-  type = list(string)
+variable "serv_accounts" {
+  type = list(object({
+    name  = string
+    role = optional(string) 
+    groups = optional(list(object ({
+      group = string
+      role = string
+    })))
+  }))
 }
 
 variable "topics" {

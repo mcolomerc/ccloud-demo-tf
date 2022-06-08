@@ -11,23 +11,20 @@ output "cluster" {
     kind          = module.cluster.ccloud_cluster.kind
   }
 }
+ 
 
-output "saccount" {
-  sensitive = true
-  value     = module.saccount.manager_service_account
-}
-
-output "sas" {
+output "service_accounts" { 
   sensitive = true
   value = {
-    for k, s in module.saccount.service_accounts_credentials : k => {
-      name   = k
-      id     = s.id
-      secret = s.secret
+    for k, t in module.saccount : k => {
+      id         = t.service_accounts_credentials.id
+      name       = t.service_accounts_credentials.display_name
+      secret     = t.service_accounts_credentials.secret
     }
   }
 }
-
+ 
+ 
 output "topics" {
   value = {
     for k, t in module.topic : k => {
@@ -38,11 +35,4 @@ output "topics" {
     }
   }
 }
-
-output "accounts" {
-  value = module.saccount.sa_accounts
-}
-
-output "cli_accounts" {
-  value = module.saccount.cli_group_maps
-}
+ 

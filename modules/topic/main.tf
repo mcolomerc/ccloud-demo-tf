@@ -60,12 +60,3 @@ resource "confluent_role_binding" "app-producer-developer-write" {
   ]
 }
 
-/*
-resource "confluent_role_binding" "app-producer-developer-read-from-group" {
-  count = var.rbac_enabled == true ? 1 : 0
-  principal = "User:${data.confluent_service_account.consumer[count.index].id}"
-  role_name = "DeveloperRead"
-  crn_pattern = "${data.confluent_kafka_cluster.kafka_cluster.rbac_crn}/kafka=${data.confluent_kafka_cluster.kafka_cluster.id}/group=confluent_cli_consumer_*" 
-}  
-*/
-

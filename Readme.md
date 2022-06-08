@@ -70,25 +70,50 @@ cluster = {
 - Service account is required in this configuration to create topics and assign roles
 
 ```sh
-service_account_manager = "mcolomer-sa-manager"
+serv_account_admin = {
+  name = "mcolomer-sa-man"
+  role = "CloudClusterAdmin"  
+}
 ```
 
-- RBAC 
+- **RBAC** 
 
-* RBAC is not supported in Confluent Cloud Basic Cluster. 
+  * RBAC is not supported in Confluent Cloud Basic Cluster. 
     
-* Standard cluster: Service account to consume or produce messages from/to topics:
-
-´´´sh 
-service_accounts = ["mcolomer-producer-sa", "mcolomer-producer-customer-sa"]
-´´´
-
-Service accoounts with confluent_cli_consumer_* group
-
-´´´sh 
-service_accounts_cli_group = ["mcolomer-consumer-sa" ,"mcolomer-cons-sa" ]
-´´´
+  * Standard cluster: 
+  
+  Provide a Service account list to consume or produce messages from/to topics:
  
+```sh   
+serv_accounts = [ 
+  {
+    name = "mcolomer-producer-sa"  
+  },
+  {
+    name = "mcolomer-producer-customer-sa"  
+  },
+  {
+    name   = "mcolomer-consumer-sa"  
+    groups = [
+      { 
+        group = "confluent_cli_consumer_*", 
+        role = "DeveloperRead" 
+      }
+    ]
+  },
+  {
+    name   = "mcolomer-cons-sa" 
+    groups = [
+      { 
+        group = "confluent_cli_consumer_*", 
+        role = "DeveloperRead" 
+      }
+    ]
+  }
+]
+```
+
+Groups is an optional value, if used it will add the principal to the group with specified role.
 
 ### Topics
  
@@ -178,7 +203,7 @@ terraform apply --var-file=./envs/standard-gcp.tfvars
     - Service accounts to consume messages from topics
 
     ```sh
-    terraform output sas
+    terraform output service_accounts
     ```
 
 * Clean Up 
