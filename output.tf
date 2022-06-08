@@ -13,6 +13,15 @@ output "cluster" {
 }
  
 
+output "service_account_admin" { 
+  sensitive = true
+  value = module.saccount_admins.service_accounts_credentials 
+}
+
+output "service_account_admin_roles" {  
+  value = module.saccount_admins.service_account_role[0]
+}
+
 output "service_accounts" { 
   sensitive = true
   value = {
@@ -23,7 +32,7 @@ output "service_accounts" {
     }
   }
 }
- 
+
  
 output "topics" {
   value = {

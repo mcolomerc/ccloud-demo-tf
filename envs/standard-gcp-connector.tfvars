@@ -18,6 +18,9 @@ serv_accounts = [
     name = "mcolomer-producer-sa"  
   },
   {
+    name = "mcolomer-producer-customer-sa"  
+  },
+  {
     name   = "mcolomer-consumer-sa"  
     groups = [
       { 
@@ -25,7 +28,16 @@ serv_accounts = [
         role = "DeveloperRead" 
       }
     ]
-  } 
+  },
+  {
+    name   = "mcolomer-cons-sa" 
+    groups = [
+      { 
+        group = "confluent_cli_consumer_*", 
+        role = "DeveloperRead" 
+      }
+    ]
+  }
 ]
 
 #Topic 
@@ -36,7 +48,17 @@ topics = [
     name     = "mcolomer-orders"
     producer = "mcolomer-producer-sa",
     consumer = "mcolomer-consumer-sa"
-  } 
+  },
+  {
+    name     = "mcolomer-inventory"
+    producer = "mcolomer-producer-sa",
+    consumer = "mcolomer-consumer-sa"
+  },
+  {
+    name     = "mcolomer-customers"
+    producer = "mcolomer-producer-customer-sa",
+    consumer = "mcolomer-consumer-sa"
+  }
 ]
 
 /* Connector */
@@ -47,9 +69,10 @@ connector = {
   service_account  = "mcolomer-producer-sa"
   config = {
     "connector.class"          = "DatagenSource"
-    "name"                     = "DatagenSourceConnector_tf" 
+    "name"                     = "DatagenSourceConnector_0" 
     "output.data.format"       = "JSON"
     "quickstart"               = "ORDERS"
     "tasks.max"                = "1"
   }
-} 
+}
+

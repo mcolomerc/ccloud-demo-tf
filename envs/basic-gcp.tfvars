@@ -21,3 +21,5 @@ topics = [
     name     = "mcolomer-customers" 
   }
 ]
+ 
+connector_deploy = false s 

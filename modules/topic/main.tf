@@ -14,8 +14,8 @@ resource "confluent_kafka_topic" "topic" {
   topic_name    = var.topic.name
   http_endpoint = data.confluent_kafka_cluster.kafka_cluster.http_endpoint
   credentials {
-    key    = var.sa.id
-    secret = var.sa.secret
+    key    = var.admin_sa.id
+    secret = var.admin_sa.secret
   }
 
   depends_on = [

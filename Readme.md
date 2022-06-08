@@ -244,7 +244,7 @@ Sample records:
  {"number":2,"date":18501,"shipping_address":"1 Bedford St, London WC2E 9HG, United Kingdom","cost":5.00}
 
  {"number":3,"date":18502,"shipping_address":"3307 Northland Dr Suite 400, Austin, TX 78731, USA","cost":10.00} 
-````
+```
 
 ``` 
 confluent kafka topic produce <TOPIC_NAME> --environment <ENVIRONMENT_ID> \    
@@ -263,3 +263,34 @@ confluent kafka topic consume <TOPIC_NAME> --from-beginning --environment <ENVIR
 ```
 
 When you are done, press 'Ctrl-C'.
+
+## Connector 
+
+* Source connector 
+
+1. Enable connector deployment 
+
+```sh
+connector_deploy = true 
+```
+
+2. Source connector configuration
+
+* An exisiting topic
+* An existing service account with grants to produce messages to the topic
+* Connector configuration
+
+ 
+```sh
+connector = {
+  topic = "mcolomer-orders"
+  service_account  = "mcolomer-producer-sa"
+  config = {
+    "connector.class"          = "DatagenSource"
+    "name"                     = "DatagenSourceConnector_tf" 
+    "output.data.format"       = "JSON"
+    "quickstart"               = "ORDERS"
+    "tasks.max"                = "1"
+  }
+} 
+```

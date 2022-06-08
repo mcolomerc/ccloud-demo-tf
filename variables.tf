@@ -18,18 +18,18 @@ variable "cluster" {
 
 variable "serv_account_admin" {
   type = object({
-    name  = string
+    name = string
     role = string
   })
 }
 
 variable "serv_accounts" {
   type = list(object({
-    name  = string
-    role = optional(string) 
-    groups = optional(list(object ({
+    name = string
+    role = optional(string)
+    groups = optional(list(object({
       group = string
-      role = string
+      role  = string
     })))
   }))
 }
@@ -40,5 +40,29 @@ variable "topics" {
     consumer = optional(string)
     producer = optional(string)
   }))
+}
+
+/* **************** */
+/* *** Connector ** */
+variable "connector_deploy" {
+  type = bool
+}
+variable "connector" {
+  type = object({
+    topic           = string
+    service_account = string
+    config          = map(string)
+  })
+  default = {
+    topic           = "mcolomer-orders"
+    service_account = "mcolomer-producer-sa"
+    config = {
+      "connector.class"    = "DatagenSource"
+      "name"               = "DatagenSourceConnector_0"
+      "output.data.format" = "JSON"
+      "quickstart"         = "ORDERS"
+      "tasks.max"          = "1"
+    }
+  }
 }
 

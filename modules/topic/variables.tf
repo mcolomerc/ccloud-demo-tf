@@ -18,7 +18,7 @@ variable "topic" {
   })
 }
 
-variable "sa" {
+variable "admin_sa" {
   type = object({
     id     = string
     secret = string
