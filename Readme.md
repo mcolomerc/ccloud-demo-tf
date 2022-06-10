@@ -1,5 +1,7 @@
 # Confluent Cloud Terraform deployment
 
+Create clusters in Confluent Cloud using Terraform.
+
 Confluent Terraform provider 
 https://registry.terraform.io/providers/confluentinc/confluent/latest/docs
 
@@ -17,57 +19,76 @@ export CONFLUENT_CLOUD_API_SECRET="<cloud_api_secret>"
  
 ## Variables 
 
-*terraform.tfvars*
-
-### Confluent Cloud environment
+### Confluent Cloud environment
 
 Existing Confluent Cloud Environment ID 
 
 ```sh
-environment = "default"
+environment = "<environment_id>"
 ```
 
 *Terraform uses an existing environment, it wont create a new environment if it does not exist*.
 
-### Cluster 
+### Cluster List** 
 
-#### Basic Cluster
+Terraform will create a new cluster for each entry in the list.
+
+```sh
+clusters = [ {
+  <cluster_object>
+}]
+```
+
+#### Cluster Object 
+
+##### Basic Cluster
 
 Cluster properties:
 
 - **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
 - **cloud**: must be set to GCP, AWS or AZURE
 
-```sh
-cluster = {
-    display_name = "basic-inventory"
-    availability = "SINGLE_ZONE"
-    cloud        = "GCP"
-    region       = "europe-west3"
-    type         = "BASIC"  
-}
+```sh 
+  display_name = "basic-inventory"
+  availability = "SINGLE_ZONE"
+  cloud        = "GCP"
+  region       = "europe-west3"
+  type         = "BASIC"   
 ``` 
 
-#### Standard Cluster
+##### Standard Cluster
 
 Cluster properties:
 
 - **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
 - **cloud**: must be set to GCP, AWS or AZURE
 
-```sh
-cluster = {
-    display_name = "inventory"
-    availability = "SINGLE_ZONE"
-    cloud        = "GCP"
-    region       = "europe-west3"
-    type         = "STANDARD"  
-}
+```sh 
+  display_name = "inventory"
+  availability = "SINGLE_ZONE"
+  cloud        = "GCP"
+  region       = "europe-west3"
+  type         = "STANDARD"   
 ``` 
 
-### Service Accounts
+##### Dedicated Cluster
 
-- Service account is required in this configuration to create topics and assign roles
+- **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
+- **cloud**: must be set to GCP, AWS or AZURE
+- **cku** : must be set for DEDICATED clusters
+
+```sh 
+  display_name = "inventory"
+  availability = "SINGLE_ZONE"
+  cloud        = "GCP"
+  region       = "europe-west3"
+  type         = "DEDICATED"
+  cku          = "true"
+```
+ 
+##### Service Accounts
+
+- Service account is required in this configuration to manage resources (create topics, assign roles, ...)
 
 ```sh
 serv_account_admin = {
@@ -115,11 +136,11 @@ serv_accounts = [
 
 Groups is an optional value, if used it will add the principal to the group with specified role.
 
-### Topics
+##### Topics
  
 A list of topics to create:
 
-#### Basic Cluster 
+###### Basic Cluster 
 
 Each object:
 
@@ -139,7 +160,7 @@ topics = [
 ]
 ```
 
-#### Standard Cluster 
+###### Standard and Dedicated Cluster 
 
 Each object:  
 
@@ -167,11 +188,38 @@ topics = [
 ]
 ```
 
+##### Connector 
+
+Source connector configuration
+
+* An exisiting topic
+* An existing service account with grants to produce messages to the topic
+* Connector configuration
+
+ 
+```sh
+connector = {
+  topic = "mcolomer-orders"
+  service_account  = "mcolomer-producer-sa"
+  config = {
+    "connector.class"          = "DatagenSource"
+    "name"                     = "DatagenSourceConnector_tf" 
+    "output.data.format"       = "JSON"
+    "quickstart"               = "ORDERS"
+    "tasks.max"                = "1"
+  }
+} 
+```
+
 ### Examples 
  
-  * Basic GCP Cluster: ./envs/basic-gcp.tfvars
+* Basic GCP Cluster: *./envs/basic-gcp.tfvars*
 
-  * Standard GCP Cluster: ./envs/standard-gcp.tfvars  
+* Standard GCP Cluster: *./envs/standard-gcp.tfvars* 
+
+* Dedicated GCP Cluster: *./envs/dedicated-gcp.tfvars*
+
+* Multiple Clusters: *./envs/multi-gcp.tfvars*
 
 ## Terraform 
 
@@ -189,9 +237,13 @@ terraform validate
 
 * Deploy  
 
+Plan:
+
 ```sh
 terraform plan --var-file=./envs/standard-gcp.tfvars
 ```
+
+Apply:
 
 ```sh
 terraform apply --var-file=./envs/standard-gcp.tfvars
@@ -264,33 +316,3 @@ confluent kafka topic consume <TOPIC_NAME> --from-beginning --environment <ENVIR
 
 When you are done, press 'Ctrl-C'.
 
-## Connector 
-
-* Source connector 
-
-1. Enable connector deployment 
-
-```sh
-connector_deploy = true 
-```
-
-2. Source connector configuration
-
-* An exisiting topic
-* An existing service account with grants to produce messages to the topic
-* Connector configuration
-
- 
-```sh
-connector = {
-  topic = "mcolomer-orders"
-  service_account  = "mcolomer-producer-sa"
-  config = {
-    "connector.class"          = "DatagenSource"
-    "name"                     = "DatagenSourceConnector_tf" 
-    "output.data.format"       = "JSON"
-    "quickstart"               = "ORDERS"
-    "tasks.max"                = "1"
-  }
-} 
-```
