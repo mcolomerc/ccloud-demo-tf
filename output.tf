@@ -4,44 +4,36 @@ output "environment" {
 
 output "cluster" {
   value = {
-    id            = module.cluster.ccloud_cluster.id
-    region        = module.cluster.ccloud_cluster.region
-    http_endpoint = module.cluster.ccloud_cluster.http_endpoint
-    rbac_crn      = module.cluster.ccloud_cluster.rbac_crn
-    kind          = module.cluster.ccloud_cluster.kind
-  }
-}
- 
-
-output "service_account_admin" { 
-  sensitive = true
-  value = module.saccount_admins.service_accounts_credentials 
-}
-
-output "service_account_admin_roles" {  
-  value = module.saccount_admins.service_account_role[0]
-}
-
-output "service_accounts" { 
-  sensitive = true
-  value = {
-    for k, t in module.saccount : k => {
-      id         = t.service_accounts_credentials.id
-      name       = t.service_accounts_credentials.display_name
-      secret     = t.service_accounts_credentials.secret
+    for k, cluster in module.cluster : k => {
+      id                 = cluster.ccloud_cluster.id
+      display_name       = cluster.ccloud_cluster.display_name
+      kind               = cluster.ccloud_cluster.kind
+      rbac_crn           = cluster.ccloud_cluster.rbac_crn
+      region             = cluster.ccloud_cluster.region
+      cloud              = cluster.ccloud_cluster.cloud
+      availability       = cluster.ccloud_cluster.availability
+      bootstrap_endpoint = cluster.ccloud_cluster.bootstrap_endpoint
+      topics             = cluster.topics
+      rbac_enabled       = cluster.rbac_enabled
+      connector          = cluster.source_connector
     }
   }
 }
 
- 
-output "topics" {
+output "service_account_admin" {
+  sensitive = true
   value = {
-    for k, t in module.topic : k => {
-      id         = t.created_topic.id
-      name       = t.created_topic.topic_name
-      partitions = t.created_topic.partitions_count
-      config     = t.created_topic.config
+    for k, cluster in module.cluster : k => {
+      admin_sa = cluster.service_account_admin
     }
   }
 }
- 
+
+output "service_accounts" {
+  sensitive = true
+  value = {
+    for k, cluster in module.cluster : k => {
+      admin_sa = cluster.service_accounts
+    }
+  }
+}
