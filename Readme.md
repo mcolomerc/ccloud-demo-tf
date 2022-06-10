@@ -2,7 +2,7 @@
 
 Create clusters in Confluent Cloud using Terraform and the [Confluent Terraform provider](https://registry.terraform.io/providers/confluentinc/confluent) 
 
-Setup: 
+Get started: 
 
 * Create a service account in Confluent Cloud
 
@@ -10,7 +10,7 @@ Setup:
 
 * Create a Cloud API Key for the service account
 
-* Set your environment:
+* Setup your environment:
 
 ```sh
 export CONFLUENT_CLOUD_API_KEY="<cloud_api_key>" 
