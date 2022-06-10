@@ -19,7 +19,7 @@ export CONFLUENT_CLOUD_API_SECRET="<cloud_api_secret>"
  
 ## Variables 
 
-### Confluent Cloud environment
+### Confluent Cloud environment
 
 Existing Confluent Cloud Environment ID 
 
@@ -29,7 +29,7 @@ environment = "<environment_id>"
 
 *Terraform uses an existing environment, it wont create a new environment if it does not exist*.
 
-### Cluster List** 
+### Cluster List
 
 Terraform will create a new cluster for each entry in the list.
 
@@ -71,7 +71,7 @@ Cluster properties:
   type         = "STANDARD"   
 ``` 
 
-##### Dedicated Cluster
+##### Dedicated Cluster
 
 - **availability**: must be set to SINGLE_ZONE or MULTI_ZONE 
 - **cloud**: must be set to GCP, AWS or AZURE
