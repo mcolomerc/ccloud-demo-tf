@@ -83,7 +83,7 @@ Cluster properties:
   cloud        = "GCP"
   region       = "europe-west3"
   type         = "DEDICATED"
-  cku          = "true"
+  cku          = 1
 ```
  
 ##### Service Accounts
