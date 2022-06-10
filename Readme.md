@@ -41,6 +41,8 @@ clusters = [ {
 
 #### Cluster Object 
 
+Confluent Cloud cluster type: BASIC, STANDARD or DEDICATED. 
+
 ##### Basic Cluster
 
 Cluster properties:
@@ -101,7 +103,7 @@ serv_account_admin = {
 
   * RBAC is not supported in Confluent Cloud Basic Cluster. 
     
-  * Standard cluster: 
+  * Standard & Dedicated clusters: 
   
   Provide a Service account list to consume or produce messages from/to topics:
  
@@ -138,13 +140,7 @@ Groups is an optional value, if used it will add the principal to the group with
 
 ##### Topics
  
-A list of topics to create:
-
-###### Basic Cluster 
-
-Each object:
-
-- name: Topic name  
+A list of topics to create: 
 
 ```sh
 topics = [
@@ -160,7 +156,7 @@ topics = [
 ]
 ```
 
-###### Standard and Dedicated Cluster 
+- Topics RBAC configuration. 
 
 Each object:  
 
