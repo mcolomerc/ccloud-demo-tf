@@ -16,7 +16,10 @@ clusters = [
     topics = [
       {
         name = "mcolomer-orders"
-      } 
+      },
+      {
+        name = "mcolomer-inventory"
+      }
     ] 
   }
 ]
