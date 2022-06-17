@@ -1,4 +1,4 @@
-environment = "env-zp5p7"
+environment = "env-w75k5w"
 
 clusters = [
   {
@@ -16,13 +16,7 @@ clusters = [
     topics = [
       {
         name = "mcolomer-orders"
-      },
-      {
-        name = "mcolomer-inventory"
-      },
-      {
-        name = "mcolomer-customers"
-      }
+      } 
     ] 
   }
 ]

@@ -1,8 +1,8 @@
-environment = "env-zp5p7"
+environment = "env-w75k5w"
 
 clusters = [
   {
-    display_name = "basic-inventory"
+    display_name = "basic-cevents"
     availability = "SINGLE_ZONE"
     cloud        = "GCP"
     region       = "europe-west3"
