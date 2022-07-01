@@ -19,7 +19,7 @@ data "confluent_kafka_topic" "sourcetopic" {
   }
 
   topic_name    = var.topic
-  http_endpoint = data.confluent_kafka_cluster.conncluster.http_endpoint
+  rest_endpoint = data.confluent_kafka_cluster.conncluster.http_endpoint
 
   credentials {
     key    = var.admin_sa.id
