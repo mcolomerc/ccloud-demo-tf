@@ -12,7 +12,7 @@ resource "confluent_kafka_topic" "topic" {
     id = data.confluent_kafka_cluster.kafka_cluster.id
   } 
   topic_name    = var.topic.name
-  http_endpoint = data.confluent_kafka_cluster.kafka_cluster.http_endpoint
+  rest_endpoint = data.confluent_kafka_cluster.kafka_cluster.rest_endpoint
   credentials {
     key    = var.admin_sa.id
     secret = var.admin_sa.secret

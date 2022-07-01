@@ -5,7 +5,7 @@ terraform {
   required_providers {
     confluent = {
       source  = "confluentinc/confluent"
-      version = "0.10.0"
+      version = "1.0.0"
     }
   }
   experiments = [module_variable_optional_attrs]
@@ -18,3 +18,5 @@ provider "confluent" {}
   api_secret = var.confluent_cloud_api_secret
 } */
 
+#  CONFLUENT_CLOUD_API_KEY env var
+#  CONFLUENT_CLOUD_API_SECRET env var
