@@ -14,6 +14,7 @@ output "cluster" {
       availability       = cluster.ccloud_cluster.availability
       bootstrap_endpoint = cluster.ccloud_cluster.bootstrap_endpoint
       topics             = cluster.topics
+      acls               = cluster.acls
       rbac_enabled       = cluster.rbac_enabled
       connector          = cluster.source_connector
     }

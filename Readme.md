@@ -185,6 +185,34 @@ topics = [
 ]
 ```
 
+##### ACLs
+
+[ACLs](https://docs.confluent.io/current/security/acl.html) are used to control access to topics.
+
+```sh
+ acls = [
+      {
+        resource_type   = "TOPIC"
+        resource_name   = "mcolomer-orders"
+        service_account = "mcolomer-producer-sa"
+        pattern_type    = "LITERAL"  
+        operation       = "WRITE"   
+        permission      = "ALLOW"   
+      }
+    ]
+```
+
+Accepted values are:
+
+* Resource Type: UNKNOWN, ANY, TOPIC, GROUP, CLUSTER, TRANSACTIONAL_ID, DELEGATION_TOKEN
+
+* Pattern Type: UNKNOWN, ANY, MATCH, LITERAL, PREFIXED
+
+* Operation: UNKNOWN, ANY, ALL, READ, WRITE, CREATE, DELETE, ALTER, DESCRIBE, CLUSTER_ACTION, DESCRIBE_CONFIGS, ALTER_CONFIGS, IDEMPOTENT_WRITE
+
+* Permission: UNKNOWN, ANY, ALLOW, DENY
+
+
 ##### Connector 
 
 Source connector configuration

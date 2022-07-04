@@ -28,6 +28,14 @@ variable "cluster" {
       consumer = optional(string)
       producer = optional(string)
     })))
+    acls = optional(list(object({
+      resource_type   = string
+      resource_name   = string
+      service_account = string
+      pattern_type    = string  
+      operation       = string
+      permission      = string
+    })))
     connector = optional(object({
       topic           = string
       service_account = string
