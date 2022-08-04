@@ -19,6 +19,9 @@ clusters = [
       },
       {
         name = "mcolomer-inventory"
+      }, 
+      {
+        name = "mcolomer-products"
       }
     ] 
   }
