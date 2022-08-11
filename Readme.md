@@ -1,6 +1,6 @@
 # Confluent Cloud Terraform deployment
 
-Create clusters in Confluent Cloud using Terraform and the [Confluent Terraform provider](https://registry.terraform.io/providers/confluentinc/confluent) 
+Create Confluent Cloud clusters using Terraform and the [Confluent Terraform provider](https://registry.terraform.io/providers/confluentinc/confluent) 
 
 Get started: 
 
